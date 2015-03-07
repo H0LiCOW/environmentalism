@@ -1,0 +1,1 @@
+This directory is intended to hold small data files.  In particular the spectroscopic redshifts from the different observational efforts (VLT, Gemini, Keck) and short excerpts from photometric catalogs.  The short photometry files are just used for testing the code.
