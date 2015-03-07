@@ -5,6 +5,20 @@ __pycache__/
 # emacs savefiles
 *~
 
+# Latex auxillary files
+*aux
+*log
+*blg
+*dvi
+*nav
+*out
+*toc
+*snm
+
+# Also ignore PDF files
+# NB: a pdf file can always be forced to be tracked via git add -f
+*pdf
+
 # C extensions
 *.so
 
