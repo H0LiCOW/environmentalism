@@ -1,0 +1,352 @@
+###########################################################################
+#
+# OPE for MOIRCS observations on 2015 Mar 31 (HST) = 2015 Apr 01 UT
+#
+# Four science targets:
+#   HE0435
+#   HE1104
+#   RXJ1131
+#   B1608
+#
+# Observing Strategy
+# ------------------
+#  Band Clock time Lenses observed
+#  ---- ---------- ----------------------
+#   J     45 min   HE1104, RXJ1131, B1608
+#   H     90 min   All
+#   Ks    45 min   HE1104, RXJ1131, B1608
+#
+#  J-band exposures:  9-point dither patterns of 1x120sec 
+#  H-band exposures:  9-point dither patterns of 4x30sec 
+#  Ks-band exposures: 9-point dither patterns of 3x50sec 
+#
+# Overheads
+# --------------
+#  Used the Excel spreadsheet overhead calculator to find the amount of
+#  clock time associated with the exposures in each filter
+#
+#  Band  t_exp  Clock time
+#  ----  ------ ----------
+#   J    1x120s   25.3 min
+#   H    3x40s    34.5 min
+#   Ks   3x50s    36.0 min
+
+###########################################################################
+#
+# Header block
+#
+# NB: I'm assuming that start/end dates and times are in Hawaii time (HST)
+#
+#
+
+<HEADER>
+PROPOSALID=Keck_Fassnacht
+OBSERVATION_PERIOD=2015-03-31-18:00:00 - 2013-04-01-06:30:00
+OBE_ID=MOIRCS
+OBE_MODE=IMAG
+</HEADER>
+
+<PARAMETER_LIST>
+###
+### NOTE -- USUALLY NO NEEED TO CHANGE LINES BELOW ###
+###
+
+### GLOBAL SETTINGS ###
+DEF_IMG=OBE_ID=MOIRCS OBE_MODE=IMAG
+DEF_TOOL=OBE_ID=MOIRCS OBE_MODE=TOOL
+
+##  FILTERS
+DEF_DARK=FILTER_A=NOP FILTER_B=NOP GRISM=BP
+DEF_IMY=FILTER_A=Y FILTER_B=CSL GRISM=HOLE
+DEF_IMJ=FILTER_A=J FILTER_B=CSL GRISM=HOLE
+DEF_IMH=FILTER_A=H FILTER_B=CSL GRISM=HOLE
+DEF_IMKS=FILTER_A=KS FILTER_B=CSL GRISM=HOLE
+DEF_IMKSND=FILTER_A=KS FILTER_B=CSL GRISM=ND
+
+DEF_IMNB119=FILTER_A=NB119 FILTER_B=CSL GRISM=HOLE
+DEF_IMFE2=FILTER_A=FE2 FILTER_B=CSL GRISM=HOLE
+DEF_IMNB1550=FILTER_A=HOLE FILTER_B=NB1550 GRISM=HOLE
+DEF_IMNB1657=FILTER_A=HOLE FILTER_B=NB1657 GRISM=HOLE
+DEF_IMH2=FILTER_A=H2 FILTER_B=CSL GRISM=HOLE
+DEF_IMBRG=FILTER_A=BRG FILTER_B=CSL GRISM=HOLE
+DEF_IMNB2071=FILTER_A=HOLE FILTER_B=NB2071 GRISM=HOLE
+DEF_IMNB2095=FILTER_A=HOLE FILTER_B=NB2095 GRISM=HOLE
+DEF_IMK_CONT=FILTER_A=HOLE FILTER_B=CSL GRISM=K_CONT
+DEF_IMCO=FILTER_A=CO FILTER_B=CSL GRISM=HOLE
+DEF_IMNB2315=FILTER_A=HOLE FILTER_B=NB2315 GRISM=HOLE
+
+
+
+########################################################################
+#
+#  Definitions of Objects for Science Targets
+#
+#  Note: OBJECT name will be written in the fits file. 
+#
+
+HE0435=OBJECT=HE0435-1223 RA=043814.871 DEC=-121714.96 EQUINOX=2000.0 PA=0.0
+HE1104=OBJECT=HE1104-1805 RA=110633.450 DEC=-182124.20 EQUINOX=2000.0 PA=0.0
+RXJ1131=OBJECT=RXJ1131-1231 RA=113151.435 DEC=-123158.24 EQUINOX=2000.0 PA=0.0
+B1608=OBJECT=B1608+656 RA=160913.956 DEC=+653228.00 EQUINOX=2000.0 PA=0.0
+
+########################################################################
+#
+#  Definitions of Objects for Standard Stars
+#
+#   <<< Observers --- put your standard star information here >>>
+# e.g. FS21  J=13.020 H=13.064 Ks=13.168 
+
+FS10  J=14.745 H=14.845 Ks=14.987
+FS19  J=13.565 H=13.647 Ks=13.786
+FS27  J=13.473 H=13.179 Ks=13.121
+FS151 J=12.206 H=11.943 K=11.869
+
+FS10=OBJECT=FS10 RA=034850.200 DEC=-005831.20 EQUINOX=2000.0 PA=0.0
+FS19=OBJECT=FS19 RA=103342.750 DEC=-114138.30 EQUINOX=2000.0 PA=0.0
+FS27=OBJECT=FS27 RA=164041.560 DEC=+362112.40 EQUINOX=2000.0 PA=0.0
+FS151=OBJECT=FS151 RA=210414.75 DEC=+303021.2 EQUINOX=2000.0 PA=0.0
+
+########################################################################
+#
+##  FOCUSING TARGETS
+#   <<< No need to edit -- the SA usually will fill here.>>>
+#   <<< Rich star clusters near your targets will be used.>>>
+
+M3=OBJECT=MESSIER3 RA=134211.00 DEC=+282232.0 EQUINOX=2000.0 PA=0.0
+
+</PARAMETER_LIST>
+
+
+<COMMAND>
+
+###############################################################
+########### CALIBRATION PART ##################################
+###############################################################
+################
+### PRECHECK ###
+### For OPERATORS -- Execute with Cell Cover CLOSED.
+### To SA/OP/OBS: check points are below.
+#        - The image is not of MOS mask.
+#        - No vignetting on the left edge of ch1
+#        - Count should be around 11000--16000 ADU.
+#        - ch2/ch1 count ratio should be ~1.1 around the center.
+
+SETUPOBE         $DEF_IMG $DEF_IMKS
+CHECKFIELD       $DEF_IMG OBJECT=PRECHECK EXPTIME=13. NDUMMYREAD=0
+
+# (Optional) For Detector Readnoise Measurement: 
+# Make sure that motor=off, no latents.
+SETUPOBE         $DEF_IMG $DEF_DARK
+GETOBJECT        $DEF_IMG OBJECT=DARK DATTYPE=DARK EXPTIME=21 NDUMMYREAD=2 NEXPOSURE=5
+
+###########################
+### DARK ##################
+###########################
+#   <<< USUALLY DARK CAN BE IGNORED >>>
+
+SETUPOBE         $DEF_IMG $DEF_DARK
+
+GETOBJECT        $DEF_IMG OBJECT=DARK EXPTIME=120 COADDS=1 NDUMMYREAD=2 NEXPOSURE=5 DATTYPE=DARK
+
+GETOBJECT        $DEF_IMG OBJECT=DARK EXPTIME=30 COADDS=4 NDUMMYREAD=2 NEXPOSURE=5 DATTYPE=DARK
+
+GETOBJECT        $DEF_IMG OBJECT=DARK EXPTIME=50 COADDS=3 NDUMMYREAD=2 NEXPOSURE=5 DATTYPE=DARK
+
+
+#####################################
+### DOME FLAT 		#############
+### Dome setting is WITHOUT Top Screen !! #####
+# - The use of 600W lamp is preferred for stability.
+# - Use the BRIGHTER part for count check.
+# - The use of faint dome has only slight advantage over dark frame. 
+# 
+# If you use 10W lamp, leave the lamp ON at least 3-4 minutes 
+# before the start of data acquisition.
+#####################################
+
+### J-band Dome  ###
+## BRIGHT Dome:   600W, 12V, T=22sec  -> 18000 ADU (Nov 2012)
+## FAINT Dome:    600W, 7.5V, T=22sec  -> 3000 ADU 
+
+SETUPOBE         $DEF_IMG $DEF_IMJ
+
+CHECKFIELD       $DEF_IMG EXPTIME=13.0 NDUMMYREAD=0
+
+GETOBJECT        $DEF_IMG OBJECT=DOMEON EXPTIME=22.0 NDUMMYREAD=2 NEXPOSURE=6 DATTYPE=DOMEFLAT
+GETOBJECT        $DEF_IMG OBJECT=DOMEOFF EXPTIME=22.0 NDUMMYREAD=2 NEXPOSURE=6 DATTYPE=DOMEFLAT
+
+
+### H-band Dome  ###
+## BRIGHT Dome .... 600W, 7.9V, T=25sec  -> 18000ADU  -- Nov 2013
+## FAINT Dome  .... 600W, 5.5V, T=25sec  -> 3600ADU
+
+SETUPOBE         $DEF_IMG $DEF_IMH
+
+CHECKFIELD       $DEF_IMG EXPTIME=13.0 NDUMMYREAD=0
+
+GETOBJECT        $DEF_IMG OBJECT=DOMEON EXPTIME=25.0 NDUMMYREAD=2 NEXPOSURE=6 DATTYPE=DOMEFLAT
+
+GETOBJECT        $DEF_IMG OBJECT=DOMEOFF EXPTIME=25.0 NDUMMYREAD=2 NEXPOSURE=6 DATTYPE=DOMEFLAT
+
+
+### Ks-band Dome  ###
+## The use of the ND filter is necessay for dome flat, as the thermal
+##   emission from the screen is too high.
+##
+## For lamp-on dome, try 600W lamp with 22V (-> 16000 for 22sec @ Nov 2013). 
+##      The counts should change significantly by lamp-off level.
+
+SETUPOBE         $DEF_IMG $DEF_IMKS
+
+CHECKFIELD       $DEF_IMG EXPTIME=13.0 NDUMMYREAD=0
+
+GETOBJECT        $DEF_IMG OBJECT=DOMEON EXPTIME=22.0 NDUMMYREAD=2 NEXPOSURE=6 DATTYPE=DOMEFLAT
+
+GETOBJECT        $DEF_IMG OBJECT=DOMEOFF EXPTIME=22.0 NDUMMYREAD=2 NEXPOSURE=6 DATTYPE=DOMEFLAT
+
+
+
+
+###############################################################
+########### OBSERVATION PART ##################################
+###############################################################
+
+###########################
+### FOCUSING ##############
+###########################
+#   <<<To OBS: Edit the targets if you have any preferred focusing fields. >>>
+
+SETUPFIELD       $DEF_IMG $DEF_IMH2 $M3
+
+SETUPOBE         $DEF_IMG $DEF_IMJ
+
+CHECKFIELD       $DEF_IMG EXPTIME=7.0 PRD_SIZE=1024 NDUMMYREAD=0
+
+#   CHANGE NSTEP AND Z
+FOCUSTELESCOPE   $DEF_TOOL EXPTIME=12.0 NDUMMYREAD=0 NSTEP=9 Z=0.20 DELTAZ=0.025 FOCUS_MODE=ANA
+
+########################################################################
+#
+# Observations of Science Targets
+#
+# NOTE: There are two broad sets of commands
+#  1. Observations on each target, actually scheduled as blocks of commands
+#  2. Just a list of commands that can be used to create a block of
+#     commands on the fly.
+#
+
+###########################################################################
+#
+#  FIRST OBJECT: HE0435-1223
+#
+#   NOTE: H-band observations only
+#
+###########################################################################
+
+# Move to new object, set filter to H-band, and do a field check
+SETUPFIELD       $DEF_IMG $DEF_IMH $HE0435 AUTOGUIDE=NO
+CHECKFIELD       $DEF_IMG EXPTIME=15 NDUMMYREAD=0 SKYSUB=YES
+
+# Do the H-band dithered exposures
+#
+# Note that H-band overheads are something like 79 percent
+# Therefore 9x120s of exposure time = 85 min clock time
+GETOBJECT        $DEF_IMG EXPTIME=30.0 NDUMMYREAD=2 COADDS=4 DITHNUM=9 DITHCENTER=YES DITHLENGTH=24.0 DITHANGLE=10.0 AUTOGUIDE=NO
+
+
+
+
+SETUPFIELD       $DEF_IMG $DEF_IMKS $HE0435 AUTOGUIDE=NO
+SETUPFIELD       $DEF_IMG $DEF_IMKS $HE1104 AUTOGUIDE=NO
+SETUPFIELD       $DEF_IMG $DEF_IMKS $RXJ1131 AUTOGUIDE=NO
+SETUPFIELD       $DEF_IMG $DEF_IMKS $B1608 AUTOGUIDE=NO
+
+#   FILTER CHEANGE
+SETUPOBE         $DEF_IMG $DEF_IMH
+SETUPOBE         $DEF_IMG $DEF_IMJ
+
+#   FIELDCHECK
+CHECKFIELD       $DEF_IMG EXPTIME=15 NDUMMYREAD=0 SKYSUB=YES
+#   IF NECESSARY...
+TELOFFSET        $DEF_TOOL DX=91.0 DY=3.8 AUTOGUIDE=NO     # I think this is what we need to place the target in the center of detector 2; it coincides with the default for STD stars
+PAOFFSET         $DEF_TOOL DPA=0.0 AUTOGUIDE=NO
+
+
+##  TARGET OBSERVATION
+#<<<To OBS: Edit the lines below according to your observing plan as  
+#   you like.  The exposures given below are just the typical values under 
+#   normal sky condition.  The actual values will change each night/
+#   time/airmass.  For details, see imag_obsguide_MOIRCS.pdf >>>
+
+#<<<To OBS: Change DITHLENGTH and DITHANGLE values arbitarily when you 
+# repeat GETOBJECT command. That will eliminate the latent image 
+# near bright stars.  >>>
+
+#   J -- COADD 1
+GETOBJECT        $DEF_IMG EXPTIME=120.0 NDUMMYREAD=2 COADDS=1 DITHNUM=9 DITHCENTER=YES DITHLENGTH=24.0 DITHANGLE=10.0 AUTOGUIDE=NO
+
+#   H -- COADD 4
+GETOBJECT        $DEF_IMG EXPTIME=30.0 NDUMMYREAD=2 COADDS=4 DITHNUM=9 DITHCENTER=YES DITHLENGTH=24.0 DITHANGLE=10.0 AUTOGUIDE=NO
+
+#   KS -- COADD 3
+GETOBJECT        $DEF_IMG EXPTIME=50.0 NDUMMYREAD=2 COADDS=3 DITHNUM=9 DITHCENTER=YES DITHLENGTH=24.0 DITHANGLE=10.0 AUTOGUIDE=NO
+
+#
+
+#   THE SKYNOD CASE -- EXAMPLE
+#   NODOFFSET_? DEFINES THE SKY POSITION FROM THE POINTING POSITION.
+#   NODDITHLENGTH IS THE DITHER LENGTH ON SKY POSITION.
+#   <<<!! Ask SS for details if you want to use this option !!>>>
+
+SETUPFIELD       $DEF_IMG $DEF_IMKS $M83 AUTOGUIDE=NO
+
+#   FIELDCHECK
+CHECKFIELD       $DEF_IMG EXPTIME=21 NDUMMYREAD=2 SKYSUB=YES DITHLENGTH=60
+
+#   !! KEEP DITHCENTER=NO !!
+GETOBJECT        $DEF_IMG EXPTIME=50.0 NDUMMYREAD=2 COADDS=3 DITHNUM=9 DITHCENTER=NO DITHLENGTH=25.0 DITHANGLE=10.0 SKYNOD=YES NODOFFSET_X=600 NODOFFSET_Y=900 NODDITHANGLE=180 NODDITHLENGTH=50.0
+
+
+
+###########################
+### STANDARD STARS ########
+###########################
+##  TARGETS
+#   <<<To OBS: Add your standard star names on SETUPFIELD command >>>
+SETUPFIELD       $DEF_IMG $DEF_IMKS $FS21
+
+##  FILTERS
+SETUPOBE         $DEF_IMG $DEF_IMH
+SETUPOBE         $DEF_IMG $DEF_IMJ
+
+##  OFFSETS
+#   POINTING POSITION -> CHIP-2 CENTER
+TELOFFSET        $DEF_TOOL DX=91.0 DY=3.8 AUTOGUIDE=NO
+#   POINTING POSITION -> CHIP-1 CENTER
+TELOFFSET        $DEF_TOOL DX=-81.5 DY=2.4 AUTOGUIDE=NO
+#   CHIP-1 TO CHIP-2
+TELOFFSET        $DEF_TOOL DX=178.2 DY=1.4 AUTOGUIDE=NO
+#   CHIP-2 TO CHIP-1
+TELOFFSET        $DEF_TOOL DX=-178.2 DY=-1.4 AUTOGUIDE=NO
+
+#   FOR FURTHER CORRECTION
+TELOFFSET        $DEF_TOOL DX=0.0 DY=0.0 AUTOGUIDE=NO
+
+##  CHECK SATURATION -- PEAK SHOULD BE < 25000 (RAW) ON CH2.
+# PARTIAL READ: EXP > [MINIMUM EXPOSURES FOR PRD_SIZE] + [1-1.5] sec
+#  512 x 512  ->   2.011 sec
+#  1k x 1k    ->   5.943 sec
+# 1.5k x 1.5k ->  11.844 sec
+
+CHECKFIELD       $DEF_IMG EXPTIME=21.0 NDUMMYREAD=2
+CHECKFIELD       $DEF_IMG EXPTIME=10.0 NDUMMYREAD=2 PRD_SIZE=1024
+
+
+##  DATA ACQUISITION -- 3-dither example
+#   Defocused
+GETOBJECT        $DEF_IMG EXPTIME=22.0 NDUMMYREAD=2 DITHNUM=4 DITHCENTER=NO DITHLENGTH=70.0 DITHANGLE=10 DATTYPE=STANDARD_STAR
+
+
+
+
+</COMMAND>
