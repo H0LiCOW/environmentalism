@@ -16,20 +16,20 @@
 #   H     90 min   All
 #   Ks    45 min   HE1104, RXJ1131, B1608
 #
-#  J-band exposures:  9-point dither patterns of 1x120sec 
-#  H-band exposures:  9-point dither patterns of 4x30sec 
-#  Ks-band exposures: 9-point dither patterns of 3x50sec 
+#  J-band exposures:  8-point dither patterns of 1x120sec 
+#  H-band exposures:  8-point dither patterns of 4x30sec 
+#  Ks-band exposures: 10-point dither patterns of 3x50sec 
 #
 # Overheads
 # --------------
 #  Used the Excel spreadsheet overhead calculator to find the amount of
 #  clock time associated with the exposures in each filter
 #
-#  Band  t_exp  Clock time
-#  ----  ------ ----------
-#   J    1x120s   25.3 min
-#   H    3x40s    34.5 min
-#   Ks   3x50s    36.0 min
+#  Band  t_exp  N_dither Clock time Number of repeats
+#  ----  ------ -------- ---------- -----------------
+#   J    1x120s    8      22.5 min        2
+#   H    4x30s     8      30.6 min        3
+#   Ks   3x50s     5      19.8 min        2
 
 ###########################################################################
 #
@@ -99,12 +99,10 @@ B1608=OBJECT=B1608+656 RA=160913.956 DEC=+653228.00 EQUINOX=2000.0 PA=0.0
 FS10  J=14.745 H=14.845 Ks=14.987
 FS19  J=13.565 H=13.647 Ks=13.786
 FS27  J=13.473 H=13.179 Ks=13.121
-FS151 J=12.206 H=11.943 K=11.869
 
 FS10=OBJECT=FS10 RA=034850.200 DEC=-005831.20 EQUINOX=2000.0 PA=0.0
 FS19=OBJECT=FS19 RA=103342.750 DEC=-114138.30 EQUINOX=2000.0 PA=0.0
 FS27=OBJECT=FS27 RA=164041.560 DEC=+362112.40 EQUINOX=2000.0 PA=0.0
-FS151=OBJECT=FS151 RA=210414.75 DEC=+303021.2 EQUINOX=2000.0 PA=0.0
 
 ########################################################################
 #
@@ -205,7 +203,7 @@ GETOBJECT        $DEF_IMG OBJECT=DOMEON EXPTIME=22.0 NDUMMYREAD=2 NEXPOSURE=6 DA
 GETOBJECT        $DEF_IMG OBJECT=DOMEOFF EXPTIME=22.0 NDUMMYREAD=2 NEXPOSURE=6 DATTYPE=DOMEFLAT
 
 
-
+########################################################################
 
 ###############################################################
 ########### OBSERVATION PART ##################################
@@ -225,35 +223,194 @@ CHECKFIELD       $DEF_IMG EXPTIME=7.0 PRD_SIZE=1024 NDUMMYREAD=0
 #   CHANGE NSTEP AND Z
 FOCUSTELESCOPE   $DEF_TOOL EXPTIME=12.0 NDUMMYREAD=0 NSTEP=9 Z=0.20 DELTAZ=0.025 FOCUS_MODE=ANA
 
-########################################################################
+###########################################################################
+###########################################################################
 #
-# Observations of Science Targets
+# Observations of Science Targets and Standard Star
 #
 # NOTE: There are two broad sets of commands
 #  1. Observations on each target, actually scheduled as blocks of commands
 #  2. Just a list of commands that can be used to create a block of
 #     commands on the fly.
 #
-
 ###########################################################################
-#
-#  FIRST OBJECT: HE0435-1223
-#
-#   NOTE: H-band observations only
-#
 ###########################################################################
 
-# Move to new object, set filter to H-band, and do a field check
-SETUPFIELD       $DEF_IMG $DEF_IMH $HE0435 AUTOGUIDE=NO
-CHECKFIELD       $DEF_IMG EXPTIME=15 NDUMMYREAD=0 SKYSUB=YES
 
-# Do the H-band dithered exposures
+###############################################################
 #
-# Note that H-band overheads are something like 79 percent
-# Therefore 9x120s of exposure time = 85 min clock time
-GETOBJECT        $DEF_IMG EXPTIME=30.0 NDUMMYREAD=2 COADDS=4 DITHNUM=9 DITHCENTER=YES DITHLENGTH=24.0 DITHANGLE=10.0 AUTOGUIDE=NO
+# New Object: HE0435
+#
+###############################################################
 
+# Move to HE0435, set filter to H, and do a field check
+SETUPFIELD $DEF_IMG $DEF_IMH $HE0435 AUTOGUIDE=NO
+CHECKFIELD $DEF_IMG EXPTIME=15 NDUMMYREAD=0 SKYSUB=YES
 
+# Change filter to H
+SETUPOBE $DEF_IMG $DEF_IMH
+
+# Observations of HE0435 in H band
+TELOFFSET $DEF_TOOL DX=0.0 DY=45.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=30.0 NDUMMYREAD=2 COADDS=4 DITHNUM=8 DITHCENTER=NO DITHLENGTH=24.0 DITHANGLE=10.0 AUTOGUIDE=NO
+TELOFFSET $DEF_TOOL DX=0.0 DY=-90.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=30.0 NDUMMYREAD=2 COADDS=4 DITHNUM=8 DITHCENTER=NO DITHLENGTH=29.0 DITHANGLE=25.0 AUTOGUIDE=NO
+TELOFFSET $DEF_TOOL DX=0.0 DY=45.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=30.0 NDUMMYREAD=2 COADDS=4 DITHNUM=8 DITHCENTER=NO DITHLENGTH=27.0 DITHANGLE=-5.0 AUTOGUIDE=NO
+
+###############################################################
+#
+# New Object: HE1104
+#
+###############################################################
+
+# Move to HE1104, set filter to H, and do a field check
+SETUPFIELD $DEF_IMG $DEF_IMH $HE1104 AUTOGUIDE=NO
+CHECKFIELD $DEF_IMG EXPTIME=15 NDUMMYREAD=0 SKYSUB=YES
+
+# Observations of HE1104 in H band
+TELOFFSET $DEF_TOOL DX=0.0 DY=45.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=30.0 NDUMMYREAD=2 COADDS=4 DITHNUM=8 DITHCENTER=NO DITHLENGTH=24.0 DITHANGLE=10.0 AUTOGUIDE=NO
+TELOFFSET $DEF_TOOL DX=0.0 DY=-90.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=30.0 NDUMMYREAD=2 COADDS=4 DITHNUM=8 DITHCENTER=NO DITHLENGTH=29.0 DITHANGLE=25.0 AUTOGUIDE=NO
+TELOFFSET $DEF_TOOL DX=0.0 DY=45.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=30.0 NDUMMYREAD=2 COADDS=4 DITHNUM=8 DITHCENTER=NO DITHLENGTH=27.0 DITHANGLE=-5.0 AUTOGUIDE=NO
+
+# Change filter to J
+SETUPOBE $DEF_IMG $DEF_IMJ
+
+# Observations of HE1104 in J band
+TELOFFSET $DEF_TOOL DX=0.0 DY=45.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=120.0 NDUMMYREAD=2 COADDS=1 DITHNUM=8 DITHCENTER=NO DITHLENGTH=24.0 DITHANGLE=10.0 AUTOGUIDE=NO
+TELOFFSET $DEF_TOOL DX=0.0 DY=-90.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=120.0 NDUMMYREAD=2 COADDS=1 DITHNUM=8 DITHCENTER=NO DITHLENGTH=29.0 DITHANGLE=25.0 AUTOGUIDE=NO
+
+# Change filter to KS
+SETUPOBE $DEF_IMG $DEF_IMKS
+
+# Observations of HE1104 in KS band
+TELOFFSET $DEF_TOOL DX=0.0 DY=45.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=50.0 NDUMMYREAD=2 COADDS=3 DITHNUM=5 DITHCENTER=NO DITHLENGTH=24.0 DITHANGLE=10.0 AUTOGUIDE=NO
+TELOFFSET $DEF_TOOL DX=0.0 DY=-90.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=50.0 NDUMMYREAD=2 COADDS=3 DITHNUM=5 DITHCENTER=NO DITHLENGTH=29.0 DITHANGLE=25.0 AUTOGUIDE=NO
+
+###############################################################
+#
+# New Object: RXJ1131
+#
+###############################################################
+
+# Move to RXJ1131, set filter to KS, and do a field check
+SETUPFIELD $DEF_IMG $DEF_IMKS $RXJ1131 AUTOGUIDE=NO
+CHECKFIELD $DEF_IMG EXPTIME=15 NDUMMYREAD=0 SKYSUB=YES
+
+# Observations of RXJ1131 in KS band
+TELOFFSET $DEF_TOOL DX=0.0 DY=45.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=50.0 NDUMMYREAD=2 COADDS=3 DITHNUM=5 DITHCENTER=NO DITHLENGTH=24.0 DITHANGLE=10.0 AUTOGUIDE=NO
+TELOFFSET $DEF_TOOL DX=0.0 DY=-90.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=50.0 NDUMMYREAD=2 COADDS=3 DITHNUM=5 DITHCENTER=NO DITHLENGTH=29.0 DITHANGLE=25.0 AUTOGUIDE=NO
+
+# Change filter to H
+SETUPOBE $DEF_IMG $DEF_IMH
+
+# Observations of RXJ1131 in H band
+TELOFFSET $DEF_TOOL DX=0.0 DY=45.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=30.0 NDUMMYREAD=2 COADDS=4 DITHNUM=8 DITHCENTER=NO DITHLENGTH=24.0 DITHANGLE=10.0 AUTOGUIDE=NO
+TELOFFSET $DEF_TOOL DX=0.0 DY=-90.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=30.0 NDUMMYREAD=2 COADDS=4 DITHNUM=8 DITHCENTER=NO DITHLENGTH=29.0 DITHANGLE=25.0 AUTOGUIDE=NO
+TELOFFSET $DEF_TOOL DX=0.0 DY=45.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=30.0 NDUMMYREAD=2 COADDS=4 DITHNUM=8 DITHCENTER=NO DITHLENGTH=27.0 DITHANGLE=-5.0 AUTOGUIDE=NO
+
+# Change filter to J
+SETUPOBE $DEF_IMG $DEF_IMJ
+
+# Observations of RXJ1131 in J band
+TELOFFSET $DEF_TOOL DX=0.0 DY=45.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=120.0 NDUMMYREAD=2 COADDS=1 DITHNUM=8 DITHCENTER=NO DITHLENGTH=24.0 DITHANGLE=10.0 AUTOGUIDE=NO
+TELOFFSET $DEF_TOOL DX=0.0 DY=-90.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=120.0 NDUMMYREAD=2 COADDS=1 DITHNUM=8 DITHCENTER=NO DITHLENGTH=29.0 DITHANGLE=25.0 AUTOGUIDE=NO
+
+###############################################################
+#
+# New Object: B1608
+#
+###############################################################
+
+# Move to B1608, set filter to J, and do a field check
+SETUPFIELD $DEF_IMG $DEF_IMJ $B1608 AUTOGUIDE=NO
+CHECKFIELD $DEF_IMG EXPTIME=15 NDUMMYREAD=0 SKYSUB=YES
+
+# Observations of B1608 in J band
+TELOFFSET $DEF_TOOL DX=0.0 DY=45.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=120.0 NDUMMYREAD=2 COADDS=1 DITHNUM=8 DITHCENTER=NO DITHLENGTH=24.0 DITHANGLE=10.0 AUTOGUIDE=NO
+TELOFFSET $DEF_TOOL DX=0.0 DY=-90.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=120.0 NDUMMYREAD=2 COADDS=1 DITHNUM=8 DITHCENTER=NO DITHLENGTH=29.0 DITHANGLE=25.0 AUTOGUIDE=NO
+
+# Change filter to H
+SETUPOBE $DEF_IMG $DEF_IMH
+
+# Observations of B1608 in H band
+TELOFFSET $DEF_TOOL DX=0.0 DY=45.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=30.0 NDUMMYREAD=2 COADDS=4 DITHNUM=8 DITHCENTER=NO DITHLENGTH=24.0 DITHANGLE=10.0 AUTOGUIDE=NO
+TELOFFSET $DEF_TOOL DX=0.0 DY=-90.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=30.0 NDUMMYREAD=2 COADDS=4 DITHNUM=8 DITHCENTER=NO DITHLENGTH=29.0 DITHANGLE=25.0 AUTOGUIDE=NO
+TELOFFSET $DEF_TOOL DX=0.0 DY=45.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=30.0 NDUMMYREAD=2 COADDS=4 DITHNUM=8 DITHCENTER=NO DITHLENGTH=27.0 DITHANGLE=-5.0 AUTOGUIDE=NO
+
+# Change filter to KS
+SETUPOBE $DEF_IMG $DEF_IMKS
+
+# Observations of B1608 in KS band
+TELOFFSET $DEF_TOOL DX=0.0 DY=45.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=50.0 NDUMMYREAD=2 COADDS=3 DITHNUM=5 DITHCENTER=NO DITHLENGTH=24.0 DITHANGLE=10.0 AUTOGUIDE=NO
+TELOFFSET $DEF_TOOL DX=0.0 DY=-90.0 AUTOGUIDE=NO
+GETOBJECT  $DEF_IMG EXPTIME=50.0 NDUMMYREAD=2 COADDS=3 DITHNUM=5 DITHCENTER=NO DITHLENGTH=29.0 DITHANGLE=25.0 AUTOGUIDE=NO
+
+###############################################################
+#
+# New Object: FS27 (Standard Star)
+#
+# NOTE: Assumption is that a filter change is slower than a 
+#       move from one chip to the other.
+#
+###############################################################
+
+# Move to FS27, set filter to KS, then move the star to the
+# center of chip 2 and do a field check
+SETUPFIELD $DEF_IMG $DEF_IMKS $FS27 AUTOGUIDE=NO
+TELOFFSET  $DEF_TOOL DX=91.0 DY=3.8 AUTOGUIDE=NO
+CHECKFIELD $DEF_IMG EXPTIME=15 NDUMMYREAD=0 SKYSUB=YES
+
+# Do 3-point dithers in KS on each chip
+SETUPOBE $DEF_IMG $DEF_IMKS
+GETOBJECT $DEF_IMG EXPTIME=22.0 NDUMMYREAD=2 DITHNUM=3 DITHCENTER=NO DITHLENGTH=70.0 DITHANGLE=10.0 DATTYPE=STANDARD_STAR
+TELOFFSET $DEF_TOOL DX=-178.2 DY=-1.4 AUTOGUIDE=NO
+GETOBJECT $DEF_IMG EXPTIME=22.0 NDUMMYREAD=2 DITHNUM=3 DITHCENTER=NO DITHLENGTH=70.0 DITHANGLE=10.0 DATTYPE=STANDARD_STAR
+
+# Do 3-point dithers in J on each chip
+SETUPOBE $DEF_IMG $DEF_IMJ
+GETOBJECT $DEF_IMG EXPTIME=22.0 NDUMMYREAD=2 DITHNUM=3 DITHCENTER=NO DITHLENGTH=70.0 DITHANGLE=25.0 DATTYPE=STANDARD_STAR
+TELOFFSET $DEF_TOOL DX=178.2 DY=1.4 AUTOGUIDE=NO
+GETOBJECT $DEF_IMG EXPTIME=22.0 NDUMMYREAD=2 DITHNUM=3 DITHCENTER=NO DITHLENGTH=70.0 DITHANGLE=25.0 DATTYPE=STANDARD_STAR
+
+# Do 3-point dithers in H on each chip
+SETUPOBE $DEF_IMG $DEF_IMH
+GETOBJECT $DEF_IMG EXPTIME=22.0 NDUMMYREAD=2 DITHNUM=3 DITHCENTER=NO DITHLENGTH=70.0 DITHANGLE=-5.0 DATTYPE=STANDARD_STAR
+TELOFFSET $DEF_TOOL DX=-178.2 DY=-1.4 AUTOGUIDE=NO
+GETOBJECT $DEF_IMG EXPTIME=22.0 NDUMMYREAD=2 DITHNUM=3 DITHCENTER=NO DITHLENGTH=70.0 DITHANGLE=-5.0 DATTYPE=STANDARD_STAR
+
+##############################################################################
+##############################################################################
+##############################################################################
+
+###########################################################################
+###########################################################################
+#
+# Below here are a list of commands that can be used for cutting an pasting
+# to form an observation block
+#
+###########################################################################
+###########################################################################
 
 
 SETUPFIELD       $DEF_IMG $DEF_IMKS $HE0435 AUTOGUIDE=NO
@@ -313,7 +470,7 @@ GETOBJECT        $DEF_IMG EXPTIME=50.0 NDUMMYREAD=2 COADDS=3 DITHNUM=9 DITHCENTE
 ###########################
 ##  TARGETS
 #   <<<To OBS: Add your standard star names on SETUPFIELD command >>>
-SETUPFIELD       $DEF_IMG $DEF_IMKS $FS21
+SETUPFIELD       $DEF_IMG $DEF_IMKS $FS27
 
 ##  FILTERS
 SETUPOBE         $DEF_IMG $DEF_IMH
